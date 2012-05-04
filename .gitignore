@@ -1,3 +1,4 @@
-/Makefile
 /node_modules
 /db
+/bin/*.js
+/lib/*.js

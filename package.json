@@ -8,9 +8,10 @@
     "url": "git://github.com/yukihr/nore.git"
   },
   "main": "nore",
-  "bin" { "nore": "./bin/nore" }
+  "bin": { "nore": "./bin/nore" },
   "dependencies": {
-    "jsdom": "~0.2.14"
+    "jsdom": "~0.2.14",
+    "coffee-script": "~1.2.0"
   },
   "engines": {
     "node": ">= 0.6.16"

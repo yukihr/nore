@@ -81,7 +81,7 @@ storeArticles = (referenceHtml, dir) ->
   _title = ''
   _tmp = []
   for element in elements
-    if element.tagName.toLowerCase() in ['h1', 'h2', 'h3']
+    if element.tagName.toLowerCase() in ['h1', 'h2']
       if _tmp.length
         storeArticle _title, _tmp.join("\n"), dir
         _tmp = []
@@ -89,10 +89,10 @@ storeArticles = (referenceHtml, dir) ->
     _tmp.push element.outerHTML
 
 normalizeFilename = (str) ->
-  str.replace(/(\n)+/g, ' ')
-     .replace('#', '')
-     .replace(/[ ]+$/, '')
-     .replace('/', '%2F')
+  str = str.replace(/(\n)+/g, ' ')
+           .replace('#', '')
+           .replace(/[ ]+$/, '')
+  encodeURIComponent str
 
 storeArticle = (name, article, dir) ->
   mkdirP dir
@@ -164,4 +164,3 @@ task 'index', 'make index for each articles', (options) ->
               index[token] = [data]
   fs.writeFileSync dbdir + '/index.json', JSON.stringify index
   console.log "Wrote: #{dbdir + '/index.json'}"
-

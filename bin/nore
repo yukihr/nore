@@ -1,0 +1,28 @@
+#!/usr/bin/env coffee
+
+require 'coffee-script'
+fs = require 'fs'
+path = require 'path'
+dir = path.dirname(fs.realpathSync(__filename))
+lib  = path.join dir, '../lib'
+db  = path.join dir, '../db'
+
+Article = require(lib + '/article')
+
+# existsSync = fs.existsSync || path.existsSync
+
+nodeVersion = 'v0.6.16'
+locale = 'ja_JP'
+query = process.argv[2].toLowerCase()
+dbdir = db + "/#{nodeVersion}/#{locale}"
+
+index = JSON.parse fs.readFileSync(dbdir + '/index.json')
+
+if index.hasOwnProperty query
+  data = index[query]
+
+  for file in data
+    html = fs.readFileSync dbdir + '/' + file, 'utf-8'
+    article = new Article html
+    console.log article.ansi()
+    console.log ''
