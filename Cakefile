@@ -78,14 +78,15 @@ storeArticles = (referenceHtml, dir) ->
     span.parentNode.removeChild span
   elements = content.children
   console.log "Elements Count: " + elements.length
-  _title = ''
+  #_title = ''
   _tmp = []
+  idx = 0
   for element in elements
     if element.tagName.toLowerCase() in ['h1', 'h2']
       if _tmp.length
-        storeArticle _title, _tmp.join("\n"), dir
+        storeArticle idx++, _tmp.join("\n"), dir
         _tmp = []
-      _title = normalizeFilename element.textContent
+      #_title = normalizeFilename element.textContent
     _tmp.push element.outerHTML
 
 normalizeFilename = (str) ->
@@ -101,6 +102,8 @@ storeArticle = (name, article, dir) ->
 
 getTokens = (text) ->
   ret = []
+  text = text.replace /\(.*\)/g, ''
+         .replace /^Class\:/, ''
   tokens = text.match /\w+/g
   for token in tokens
     unless token in ret
