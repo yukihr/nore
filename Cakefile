@@ -146,7 +146,7 @@ task 'index', 'make index for each articles', (options) ->
   dbdir = "#{DB_DIR}/#{nodeVersion}/#{locale}"
   files = fs.readdirSync dbdir
   for file in files
-    unless file is 'all.html'
+    unless file in [ 'all.html', 'index.json' ]
       console.log "Processing: #{file}"
       html = fs.readFileSync dbdir + '/' + file, 'utf-8'
       doc = jsdom.jsdom html
