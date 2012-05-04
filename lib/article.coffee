@@ -58,7 +58,7 @@ module.exports = class Article
       tag = elem.tagName.toLowerCase()
       if tag in ['h1', 'h2']
         ret.push @ansiProp(elem.textContent, 'bold,underscore,fg.cyan') + "\n"
-      if tag in ['h3', 'h4']
+      else if tag in ['h3', 'h4']
         ret.push @ansiProp(elem.textContent, 'bold,underscore') + "\n"
       else if tag is 'p'
         ret.push elem.textContent
