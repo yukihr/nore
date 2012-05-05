@@ -3,7 +3,7 @@
 require 'coffee-script'
 fs = require 'fs'
 path = require 'path'
-dir = path.dirname(fs.realpathSync(__filename))
+dir = path.dirname(fs.realpathSync __filename)
 lib  = path.join dir, '../lib'
 db  = path.join dir, '../db'
 
@@ -13,16 +13,23 @@ Article = require(lib + '/article')
 
 nodeVersion = 'v0.6.16'
 locale = 'ja_JP'
-query = process.argv[2].toLowerCase()
 dbdir = db + "/#{nodeVersion}/#{locale}"
+queries = process.argv.slice 2
 
-index = JSON.parse fs.readFileSync(dbdir + '/index.json')
+index = JSON.parse (fs.readFileSync dbdir + '/index.json')
 
-if index.hasOwnProperty query
-  data = index[query]
+results = for q in queries
+  if index[q.toLowerCase()]
+    index[q.toLowerCase()]
+  else
+    []
 
-  for file in data
-    html = fs.readFileSync dbdir + '/' + file, 'utf-8'
-    article = new Article html
-    console.log article.ansi()
-    console.log ''
+files = results.shift()
+for r in results
+  files = (_r for _r in r when _r in files)
+
+for file in files
+  html = fs.readFileSync dbdir + '/' + file, 'utf-8'
+  article = new Article html
+  console.log article.ansi()
+  console.log ''
