@@ -1,7 +1,14 @@
 jsdom = require 'jsdom'
 
-module.exports = class Article
-  ansiCodes:
+getval = (obj, key) ->
+  k = key.shift()
+  if key.length
+    getval obj[k], key
+  else
+    obj[k]
+
+ansi =
+  codes:
     off: 0
     bold: 1
     underscore: 4
@@ -27,43 +34,36 @@ module.exports = class Article
       cyan: 46
       white: 47
 
-  _getAnsiCode: (obj, key) ->
-    k = key.shift()
-    if key.length
-      @_getAnsiCode obj[k], key
-    else
-      obj[k]
+  getCode: (modes) ->
+    csi = String.fromCharCode(0x1B) + '['
+    textprop = 'm'
+    modes = modes.split ','
+    codes = for mode in modes
+      getval(ansi.codes, mode.split '.')
+    csi + codes.join(';') + textprop
 
+  propertize: (text, modes) ->
+    ansi.getCode(modes) + text + ansi.getCode('off')
+
+
+module.exports = class Article
   constructor: (@html) ->
 
   html: ->
     @html
 
-  ansiCode: (modes) ->
-    csi = String.fromCharCode(0x1B) + '['
-    textprop = 'm'
-    codes = []
-    modes = modes.split ','
-    for mode in modes
-      codes.push @_getAnsiCode(@ansiCodes, mode.split '.')
-    csi + codes.join(';') + textprop
-
-  ansiProp: (text, modes) ->
-    @ansiCode(modes) + text + @ansiCode('off')
-
   ansi: ->
     doc = jsdom.jsdom @html
-    ret = []
-    for elem in doc.children
+    ret = for elem in doc.children
       tag = elem.tagName.toLowerCase()
       if tag in ['h1', 'h2']
-        ret.push @ansiProp(elem.textContent, 'bold,underscore,fg.cyan') + "\n"
+        ansi.propertize(elem.textContent, 'bold,underscore,fg.cyan') + "\n"
       else if tag in ['h3', 'h4']
-        ret.push @ansiProp(elem.textContent, 'bold,underscore') + "\n"
+        ansi.propertize(elem.textContent, 'bold,underscore') + "\n"
       else if tag is 'p'
-        ret.push elem.textContent
+        elem.textContent
       else if tag is 'pre'
-        ret.push elem.textContent.replace(/^[\W]+/, '') + "\n"
+        elem.textContent.replace(/^[\W]+/, '') + "\n"
       else
-        ret.push elem.textContent
+        elem.textContent
     ret.join('')
