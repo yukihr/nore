@@ -11,6 +11,12 @@ mkdirP = (path) ->
     _path = _path + dir + '/'
     unless existsSync _path
       fs.mkdirSync _path
+fillZero = (num, n) ->
+  str = num + ''
+  cnt = n - str.length
+  while cnt-- > 0
+    str = "0" + str
+  str
 
 LOCALE_REF_URL_MAP =
   ja_JP:
@@ -78,15 +84,13 @@ storeArticles = (referenceHtml, dir) ->
     span.parentNode.removeChild span
   elements = content.children
   console.log "Elements Count: " + elements.length
-  #_title = ''
   _tmp = []
   idx = 0
   for element in elements
     if element.tagName.toLowerCase() in ['h1', 'h2']
       if _tmp.length
-        storeArticle idx++, _tmp.join("\n"), dir
+        storeArticle fillZero(idx++, 3), _tmp.join("\n"), dir
         _tmp = []
-      #_title = normalizeFilename element.textContent
     _tmp.push element.outerHTML
 
 normalizeFilename = (str) ->
@@ -97,7 +101,7 @@ normalizeFilename = (str) ->
 
 storeArticle = (name, article, dir) ->
   mkdirP dir
-  fs.writeFileSync dir + '/' + name, article
+  fs.writeFileSync dir + '/' + normalizeFilename(name), article
   console.log "Wrote #{dir + '/' + name}"
 
 getTokens = (text) ->

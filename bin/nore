@@ -21,9 +21,6 @@ index = JSON.parse fs.readFileSync(dbdir + '/index.json')
 if index.hasOwnProperty query
   data = index[query]
 
-  data.sort (a, b) -> #sort by filename
-    a - b
-
   for file in data
     html = fs.readFileSync dbdir + '/' + file, 'utf-8'
     article = new Article html
