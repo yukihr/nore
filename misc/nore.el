@@ -1,3 +1,15 @@
+;; nore.el
+;; Search nore in Emacs
+
+;; ## Setup
+;;     (require 'nore)
+;;     (add-hook 'javascript-mode-hook
+;;               '(lambda ()
+;;                  (define-key javascript-mode-map (kbd "<f1> n") 'nore-search-doc-at-point)))
+;;     (add-hook 'coffee-mode-hook
+;;               '(lambda ()
+;;                  (define-key coffee-mode-map (kbd "<f1> n") 'nore-search-doc-at-point)))
+
 (defvar nore-command "nore"
   "nore command"
 )
@@ -47,9 +59,6 @@
         (setq buffer-read-only t)
         (goto-char (point-min)))))
 
-(add-hook 'javascript-mode-hook
-          '(lambda ()
-             (define-key javascript-mode-map (kbd "<f1> n") 'nore-search-doc-at-point)))
-(add-hook 'coffee-mode-hook
-          '(lambda ()
-             (define-key coffee-mode-map (kbd "<f1> n") 'nore-search-doc-at-point)))
+(provide 'nore)
+
+;;; nore.el ends here
