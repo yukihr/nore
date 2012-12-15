@@ -6,10 +6,11 @@ Node.js Reference Search for Command Line
 
     $ git clone https://github.com/yukihr/nore.git
     $ cd nore
+    $ npm install
     $ cake fetch
     $ cake articles
     $ cake index
-    $ npm link
+    $ npm link # or `sudo npm link`
 
 ## usage
 
